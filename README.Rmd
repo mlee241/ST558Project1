@@ -11,6 +11,14 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+# JSON Data
 
-Does this work?
+# Packages used for reading JSON data in R
+
+# Contact the NHL API
+
+## More functions
+
+## Wrapper functions
+
+# Exploratory Data Analysis
