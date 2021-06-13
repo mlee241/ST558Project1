@@ -1,0 +1,16 @@
+---
+title: "ST 558 Project 1"
+author: "Marcus Lee"
+date: "6/13/2021"
+output: 
+  github_document:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+Does this work?
