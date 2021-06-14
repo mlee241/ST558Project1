@@ -5,20 +5,152 @@ date: "6/13/2021"
 output: 
   github_document:
     toc: true
+    toc_depth: 2
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r, echo=TRUE, warning = FALSE, message=FALSE}
+library(ggplot2)
+library(jsonlite)
+library(knitr)
+library(httr)
+```
+
+
 # JSON Data
 
 # Packages used for reading JSON data in R
 
-# Contact the NHL API
+
+# Contact the NHL Records API
+
+```{r}
+base_url = "https://records.nhl.com/site/api"
+```
+
+```{r}
+get_franchise = function(){
+  full_url = paste0(base_url, "/franchise")
+  franchise_text = content(GET(url=full_url), "text")
+  franchise_json = fromJSON(franchise_text, flatten = T)
+  return(franchise_json$data)
+}
+```
+
+```{r}
+get_franchise_team_totals = function(){
+  full_url = paste0(base_url, "/franchise-team-totals")
+  franchise_team_totals_text = content(GET(url=full_url), "text")
+  franchise_team_totals_json = fromJSON(franchise_team_totals_text, flatten = T)
+  return(franchise_team_totals_json$data)
+}
+```
+
+```{r}
+get_franchise_season_records = function(id){
+  full_url = paste0(base_url, "/franchise-season-records?cayenneExp=franchiseId=",id)
+  franchise_season_records_text = content(GET(url=full_url), "text")
+  franchise_season_records_json = fromJSON(franchise_season_records_text, flatten = T)
+  return(franchise_season_records_json$data)
+}
+```
+
+```{r}
+get_franchise_goalie_records = function(id){
+  full_url = paste0(base_url, "/franchise-goalie-records?cayenneExp=franchiseId=",id)
+  franchise_goalie_records_text = content(GET(url=full_url), "text")
+  franchise_goalie_records_json = fromJSON(franchise_goalie_records_text, flatten = T)
+  return(franchise_goalie_records_json$data)
+}
+```
+
+```{r}
+get_franchise_skater_records = function(id){
+  full_url = paste0(base_url, "/franchise-skater-records?cayenneExp=franchiseId=",id)
+  franchise_skater_records_text = content(GET(url=full_url), "text")
+  franchise_skater_records_json = fromJSON(franchise_skater_records_text, flatten = T)
+  return(franchise_skater_records_json$data)
+}
+```
+
+```{r}
+get_franchise_detail = function(id){
+  full_url = paste0(base_url, "/franchise-detail?cayenneExp=mostRecentTeamId=",id)
+  franchise_detail_text = content(GET(url=full_url), "text")
+  franchise_detail_json = fromJSON(franchise_detail_text, flatten = T)
+  return(franchise_detail_json$data)
+}
+```
+
+```{r, echo=FALSE, warning=FALSE, message =FALSE}
+id=1
+franchise = get_franchise()
+franchise_team_total = get_franchise_team_totals()
+franchise_season_records = get_franchise_season_records(id)
+franchise_goalie_records = get_franchise_skater_records(id)
+franchise_skater_records = get_franchise_skater_records(id)
+franchise_detail = get_franchise_detail(id)
+```
+
+```{r}
+kable(franchise)
+```
+
+
+# Contact the NHL Stats API
+
+```{r}
+base_stats_url = "https://statsapi.web.nhl.com/api/v1"
+#https://statsapi.web.nhl.com/api/v1/expands
+```
+
+```{r}
+get_team_stats = function(){
+  # Not sure if I am doing this correctly
+  #?stats=statsSingleSeasonPlayoffs
+  #?expand=team.stats
+  full_url = paste0(base_stats_url, "/teams")
+  team.stats_text = content(GET(url=full_url), "text")
+  team.stats_json = fromJSON(team.stats_text, flatten = T)
+  #return(team.stats_json$data)
+  return(team.stats_json)
+}
+```
+
+```{r}
+#id=1
+team.stats = get_team_stats()
+```
+
+```{r}
+kable(team.stats)
+```
+
+
+
+
+
+
+
 
 ## More functions
 
 ## Wrapper functions
 
 # Exploratory Data Analysis
+
+
+
+
+
+
+
+
+
+
+
+
+
