@@ -122,36 +122,14 @@ get_team_stats = function(id){
     team.stats2id_json = team.stats_json[2] # We are ignoring the 1st list since it it useless
     return(team.stats2id_json)
   }
-  # if(...==TRUE){
-  #   if(is.numeric(...)==FALSE){
-  #     id=1
-  #     full_url =  paste0(base_stats_url, "/teams/",id)
-  #   }else{
-  #     full_url =  paste0(base_stats_url, "/teams/",id)
-  #   }
-    #full_url =  paste0(base_stats_url, "/teams/",id)
-  #}
-  # T  - solved
-  # F - solved
-  # T, number- solved
-  # F, number- solved
-  # number, F
-  # number , T
-  # else{
-  #   # This should return all of the data from all teams.
-  #   full_url = paste0(base_stats_url, "/teams?expand=team.stats=")
-  # }
-  # team.stats_text = content(GET(url=full_url), "text")
-  # team.stats_json = fromJSON(team.stats_text, flatten = T)
-  # team.stats2_json = team.stats_json[2] # We are ignoring the 1st list since it it useless
-  # #print(team.stats2_json)
-  # return(team.stats2_json)
 }
 ```
 
 ```{r}
 id=2
 team.stats = get_team_stats(id)
+# The code below here should also work if you wanted to print out the whole team.
+team.stats = get_team_stats()
 ```
 
 ```{r}
@@ -162,18 +140,50 @@ kable(team.stats)
 ```{r}
 # So wrapper function could call for modifier(team.stats) or like individual id
 #needs to get like the records api as well
-#get_wrapper <- function(x, ){
-#  return(get_team_stats(x,))
-#}
+get_wrapper <- function(api_url,id){
+  if(api_url=="https://records.nhl.com/site/api"){
+    base_url="https://records.nhl.com/site/api"
+    if(missing(id)==T){
+      franchise_wrapper = get_franchise()
+      franchise_team_total_wrapper = get_franchise_team_totals()
+      records_wrapper_no_id_list = list(franchise_wrapper,franchise_team_total_wrapper)
+      return(records_wrapper_no_id_list)
+    }
+    else{
+      franchise_season_records_wrapper = get_franchise_season_records(id)
+      franchise_goalie_records_wrapper = get_franchise_skater_records(id)
+      franchise_skater_records_wrapper = get_franchise_skater_records(id)
+      franchise_detail_wrapper = get_franchise_detail(id)
+      records_wrapper_list = list(franchise_season_records_wrapper,franchise_goalie_records_wrapper,franchise_skater_records_wrapper,franchise_detail_wrapper)
+      return(records_wrapper_list)
+    }
+  }
+  else{
+    base_stats_url="https://statsapi.web.nhl.com/api/v1"
+    if(missing(id)==T){
+        team.stats = get_team_stats()
+        return(team.stats)
+    }
+    else{
+      team.stats = get_team_stats(id)
+      return(team.stats)
+    }
+  }
+}
 ```
 
 ```{r}
 # so users can enter team id or the modifere here
-#wrap = get_wrapper(2,TRUE)
+# test cases, and all of it does work
+#wrap = get_wrapper("https://records.nhl.com/site/api",2)
+#wrap = get_wrapper("https://records.nhl.com/site/api",)
+#wrap = get_wrapper("https://statsapi.web.nhl.com/api/v1",2)
+wrap = get_wrapper("https://statsapi.web.nhl.com/api/v1")
 ```
 
 ```{r, echo=FALSE}
-#wrap
+#answer= readline(prompt = "Do you want the NHL records or the NHL stats?")
+wrap
 ```
 
 
