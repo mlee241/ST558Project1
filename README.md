@@ -141,17 +141,25 @@ get_team_stats = function(){
   # Not sure if I am doing this correctly
   #?stats=statsSingleSeasonPlayoffs
   #?expand=team.stats
-  full_url = paste0(base_stats_url, "/teams")
+  full_url = paste0(base_stats_url, "/teams?expand=team.stats=")
   team.stats_text = content(GET(url=full_url), "text")
   team.stats_json = fromJSON(team.stats_text, flatten = T)
-  #return(team.stats_json$data)
+  #team.stats2 <- team.stats[2]
+  #return(team.stats2)
+  #return(team.stats_json$data)#This is giving me a null answer
   return(team.stats_json)
+  #return(team.stats_df)
 }
 ```
 
 ``` r
-#id=1
+#id=2
 team.stats = get_team_stats()
+```
+
+``` r
+# We are ignoring team.stats[1]
+team.stats2 <- team.stats[2]
 ```
 
 ``` r
@@ -209,6 +217,56 @@ kable(team.stats)
 </tr>
 </tbody>
 </table>
+
+``` r
+#wrapper function
+wrapper_url = "https://statsapi.web.nhl.com/api/v1"
+```
+
+``` r
+get_wrapper = function(){
+  # Not sure if I am doing this correctly
+  # Probably not the most efficient way to do it
+  team.roster_full_url = paste0(wrapper_url, "/teams?expand=team.roster=")
+  person.names_full_url = paste0(wrapper_url, "/teams?expand=person.names=")
+  team.schedule.next_full_url = paste0(wrapper_url, "/teams?expand=team.schedule.next=")
+  team.schedule.previous_full_url = paste0(wrapper_url, "/teams?expand=team.schedule.previous=")
+  team.stats_full_url = paste0(wrapper_url, "/teams?expand=team.stats=")
+  #team_roster&season_full_url = paste0(wrapper_url, "/teams?expand=team.roster&season=")
+  team.Id_full_url = paste0(wrapper_url, "/teams?expand=teamId=")
+  stats_full_url = paste0(wrapper_url, "/teams?expand=stats=")
+  
+  team.roster_text = content(GET(url=team.roster_full_url), "text")
+  person.names_text = content(GET(url=person.names_full_url), "text")
+  team.schedule.next_text = content(GET(url=team.schedule.next_full_url), "text")
+  team.schedule.previous_text = content(GET(url=team.schedule.previous_full_url), "text")
+  team.stats_text = content(GET(url=team.stats_full_url), "text")
+  #team_roster&season_text = content(GET(url=team_roster&season_full_url), "text")
+  team.Id_text = content(GET(url=team.Id_full_url), "text")
+  stats_text = content(GET(url=stats_full_url), "text")
+  
+  
+  team.roster_json = fromJSON(team.roster_text, flatten = T)
+  person.names_json = fromJSON(person.names_text, flatten = T)
+  team.schedule.next_json = fromJSON(team.schedule.next_text, flatten = T)
+  team.schedule.previous_json = fromJSON(team.schedule.previous_text, flatten = T)
+  team.stats_json = fromJSON(team.stats_text, flatten = T)
+  #team_roster&season_json = fromJSON(team_roster&season_text, flatten = T)
+  team.Id_json = fromJSON(team.Id_text, flatten = T)
+  stats_json = fromJSON(stats_text, flatten = T)
+  wrapper_json <- list(team.roster_json,person.names_json, team.schedule.next_json,team.schedule.previous_json, team.stats_json, team.Id_json, stats_json)
+  #return(wrapper_json)
+  #wrap2 <- list(team.roster[2],person.names[2],)
+  #team.stats2 <- team.stats[2]
+  #return(team.stats2)
+  #return(team.stats_json)
+}
+```
+
+``` r
+#Yeah, I am going stop here today, because I do not think I am doing the wrapper function correctly.
+wrap = get_wrapper()
+```
 
 ## More functions
 

@@ -115,10 +115,10 @@ get_team_stats = function(){
   full_url = paste0(base_stats_url, "/teams?expand=team.stats=")
   team.stats_text = content(GET(url=full_url), "text")
   team.stats_json = fromJSON(team.stats_text, flatten = T)
-  team.stats2 <- team.stats[2]
-  return(team.stats2)
+  #team.stats2 <- team.stats[2]
+  #return(team.stats2)
   #return(team.stats_json$data)#This is giving me a null answer
-  #return(team.stats_json)
+  return(team.stats_json)
   #return(team.stats_df)
 }
 ```
@@ -130,7 +130,7 @@ team.stats = get_team_stats()
 
 ```{r}
 # We are ignoring team.stats[1]
-#team.stats2 <- team.stats[2]
+team.stats2 <- team.stats[2]
 ```
 
 
@@ -177,7 +177,7 @@ get_wrapper = function(){
   stats_json = fromJSON(stats_text, flatten = T)
   wrapper_json <- list(team.roster_json,person.names_json, team.schedule.next_json,team.schedule.previous_json, team.stats_json, team.Id_json, stats_json)
   #return(wrapper_json)
-  wrap2 <- list(team.roster[2],person.names[2],)
+  #wrap2 <- list(team.roster[2],person.names[2],)
   #team.stats2 <- team.stats[2]
   #return(team.stats2)
   #return(team.stats_json)
