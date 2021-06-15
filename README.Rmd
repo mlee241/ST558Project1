@@ -173,7 +173,7 @@ kable(team.stats)
 ```
 
 ```{r, echo=FALSE}
-wrap
+#wrap
 ```
 
 
