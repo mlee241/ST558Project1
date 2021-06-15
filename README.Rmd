@@ -135,7 +135,7 @@ team.stats2 <- team.stats[2]
 
 
 ```{r}
-kable(team.stats)
+kable(team.stats2)
 ```
 
 

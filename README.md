@@ -163,19 +163,12 @@ team.stats2 <- team.stats[2]
 ```
 
 ``` r
-kable(team.stats)
+kable(team.stats2)
 ```
 
 <table class="kable_wrapper">
 <tbody>
 <tr>
-<td>
-
-| x                                                                                                                                                                                  |
-|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| NHL and the NHL Shield are registered trademarks of the National Hockey League. NHL and NHL team marks are the property of the NHL and its teams. © NHL 2021. All Rights Reserved. |
-
-</td>
 <td>
 
 |  id | name                  | link             | abbreviation | teamName       | locationName | firstYearOfPlay | shortName    | officialSiteUrl                      | franchiseId | active | venue.name                        | venue.link          | venue.city   | venue.id | venue.timeZone.id    | venue.timeZone.offset | venue.timeZone.tz | division.id | division.name    | division.link          | conference.id | conference.name | conference.link          | franchise.franchiseId | franchise.teamName | franchise.link        |
