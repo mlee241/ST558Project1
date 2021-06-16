@@ -14,6 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r, echo=TRUE, warning = FALSE, message=FALSE}
 library(ggplot2)
+library(tidyverse)
 library(jsonlite)
 library(knitr)
 library(httr)
@@ -86,7 +87,7 @@ get_franchise_detail = function(id){
 ```
 
 ```{r, echo=FALSE, warning=FALSE, message =FALSE}
-id=1
+id=23
 franchise = get_franchise()
 franchise_team_total = get_franchise_team_totals()
 franchise_season_records = get_franchise_season_records(id)
@@ -136,6 +137,7 @@ team.stats = get_team_stats()
 kable(team.stats)
 ```
 
+## Wrapper functions
 
 ```{r}
 # So wrapper function could call for modifier(team.stats) or like individual id
@@ -186,19 +188,208 @@ wrap = get_wrapper("https://statsapi.web.nhl.com/api/v1")
 wrap
 ```
 
-
-
-
-
-
-
-
-
-## More functions
-
-## Wrapper functions
-
 # Exploratory Data Analysis
+
+Note(Delete this later): Each graph should make sense to look at and each graph should be discussed.
+. You should data from at least two endpoints(possibly combining them into one)
+. You should create at least two new variables that are functions of the variables from a data set you use
+. You should create some contigency tables
+. You should create numerical summaries for some quantitative variables at each setting of some of your categorical variables
+. You should create at least five plots utilizing coloring, grouping, etc. All plots should have nice labels and titles(should have at least one bar plot, one histogra, one box plot and one scatter plot)
+. 
+
+## Contigency Tables/ Numerical Summaries
+
+Here is a table that shows a basic count of position codes for the New Jersey Devils by Active/non-active players based off of the franchise_goalie_records dataset.
+
+```{r}
+franchise_goalie_records$activePlayer = as.factor(franchise_goalie_records$activePlayer)
+levels(franchise_goalie_records$activePlayer) = c("Not Active Player", "Active/Current Player")
+
+franchise_goalie_records_table <- table(franchise_goalie_records$activePlayer, franchise_goalie_records$positionCode)
+
+kable(franchise_goalie_records_table )
+```
+
+Here is a numerical summary of points made for the New Jersey Devils based off of position codes based off of the franchise_goalie_records data set. Based off of the numerical summary, the D position code does a way better job compared to the other position codes based off of total count. However, further analysis would need to be done to truly see if the D position code does a better job(Ex: Hypothesis test, etc.)
+
+```{r}
+numerical_table_summary <- franchise_goalie_records %>%
+  group_by(positionCode)%>%
+  summarize(
+    Count = n(),
+    Min = min(points, na.rm = T),
+    Max = max(points, na.rm = T),
+    Mean = mean(points, na.rm = T),
+    Sd = sd(points, na.rm = T),
+    percent_25 = quantile(points, probs=.25, na.rm = T),
+    median = median(points, na.rm = T),
+    percent_75 = quantile(points, probs=.75, na.rm = T)
+  ) %>%
+  rename(Code=positionCode, '25th percentile' = percent_25, '75th percentile' = percent_75)
+
+kable(numerical_table_summary, caption = "Numerical Summaries of the New Jersey Devils Points by Position Code based off of the franchise goalie record data set.")
+```
+
+Here is another contingency table that shows a basic count of position codes for the New Jersey Devils by seasons based off of the franchise_skater_records2 data set.
+
+```{r}
+franchise_skater_records2 <- franchise_skater_records
+franchise_skater_records2$seasons = as.factor(franchise_skater_records2$seasons)
+
+franchise_skater_records2_table <- table(franchise_skater_records2$positionCode, franchise_skater_records2$seasons)
+
+kable(franchise_skater_records2_table)
+```
+
+Here is another numerical summary of road_Win_Loss_Ratio and home_Win_Loss_Ratio made for the New Jersey Devils based off of the teams based off of the franchise_team_total data set. 
+
+Overall, when we take a look at the summary for the home_Win_Loss Ratio, it appears that most of the teams performed way better in their home stadium as supposed to playing on their opponent's stadium.
+
+```{r}
+franchise_team_total2 <- franchise_team_total
+
+franchise_team_total2 <- mutate(franchise_team_total2, road_Win_Loss_Ratio = roadWins/roadLosses)
+franchise_team_total2 <- mutate(franchise_team_total2, home_Win_Loss_Ratio = homeWins/homeLosses)
+
+get_summary <- function(z){
+  if(z==1){
+    franchise_team_total2 %>%
+    group_by(teamName) %>%
+    summarize(
+      Min = min(road_Win_Loss_Ratio, na.rm = T),
+      percent_25 = quantile(road_Win_Loss_Ratio, probs=.25, na.rm = T),
+      Median = median(road_Win_Loss_Ratio, na.rm = T),
+      Mean = mean(road_Win_Loss_Ratio, na.rm = T),
+      percent_75 = quantile(road_Win_Loss_Ratio, probs=.75, na.rm = T),
+      Max = max(road_Win_Loss_Ratio, na.rm = T),
+      ) %>%
+      rename("25th percentile"=percent_25, "75th percentile"=percent_75)
+  }else if (z==2){
+    franchise_team_total2 %>%
+    group_by(teamName) %>%
+    summarize(
+      Min = min(home_Win_Loss_Ratio, na.rm = T),
+      percent_25 = quantile(home_Win_Loss_Ratio, probs=.25, na.rm = T),
+      Median = median(home_Win_Loss_Ratio, na.rm = T),
+      Mean = mean(home_Win_Loss_Ratio, na.rm = T),
+      percent_75 = quantile(home_Win_Loss_Ratio, probs=.75, na.rm = T),
+      Max = max(home_Win_Loss_Ratio, na.rm = T),
+      ) %>%
+      rename("25th percentile"=percent_25, "75th percentile"=percent_75)
+  }else{
+    print("Wrong input!!!")
+  }
+}
+franchise_team_total2_numerical_road_Win_Loss_Ratio_summary <-get_summary(1)
+franchise_team_total2_numerical_home_Win_Loss_Ratio_summary <- get_summary(2)
+
+head(franchise_team_total2_numerical_road_Win_Loss_Ratio_summary)
+head(franchise_team_total2_numerical_home_Win_Loss_Ratio_summary)
+```
+
+
+## Graphical Summaries
+
+Continuing with the road_Win_Loss_Ratio & home_Win_Loss_Ratio summary, here are a couple plots that can help us have a better understanding of the road_Win_Loss_Ratio & home_Win_Loss_Ratio.
+
+From this general boxplot, we can see that most teams performed poorly when they were playing not at their home stadium. Also, from this visualization, it is very hard to figure out which team is associated with the box plots because some of the colors look the same.
+
+```{r}
+ggplot(franchise_team_total2, aes(fill=factor(teamName), road_Win_Loss_Ratio))+geom_boxplot() + ggtitle("Ratio of Road Win to Losses Boxplot") + xlab("Ratio of Road Win to Losses") + ylab("Teams")
+```
+So, it might better to look without the teams and plot a general box plot which will be shown below.
+
+```{r}
+ggplot(franchise_team_total2, aes(road_Win_Loss_Ratio, y=""))+geom_boxplot(fill="blue") + ggtitle("Ratio of Road Win to Losses Boxplot") + xlab("Ratio of Road Win to Losses") 
+```
+
+Here is another box plot, but with the Ratio of Home Win to Losses
+
+```{r, warning=FALSE}
+ggplot(franchise_team_total2, aes(home_Win_Loss_Ratio, y=""))+geom_boxplot(fill="green") + ggtitle("Ratio of Home Win to Losses Boxplot") + xlab("Ratio of Home Win to Losses") 
+```
+
+By comparing the two box plots, we can see that teams won a lot at their home stadium than playing at their opponent team's stadium.
+
+Since box plots have limits on showing certain statistics, we might consider looking at histograms of the ratios.
+
+However, one should be careful because changing the binwidth can change the appearance of the histogram leading to wrong conclusions. Other than that, it appears most of the ratios of road win to road losses tend to be around 0.70 to 0.90. 
+
+```{r}
+ggplot(franchise_team_total2, aes(x=road_Win_Loss_Ratio))+geom_histogram(aes(y=..density..),color="darkblue", fill="lightblue", binwidth = 0.10) + geom_density(kernel="gaussian", color="red")+ ggtitle("Histogram of Road Win to Road Losses")+ylab("Density")
+```
+Since box plots and histograms have limits on showing certain statistics, we might consider looking at bar plots of the roadWins and roadLosses by id on the franchise_team_total2 data set.
+
+By looking and comparing the two bar plots, we should realize that it is hard to come up with a conclusion with the bar plots because some ids belong to certain teams. Not only just that, but it is hard whether or not the teams made an improvement on increasing their roadWins or decreasing their roadLosses since the data set does not have a time component. Moreover, the bar plots provided down below do not give as much statistical information compared to a box plots and histograms.
+
+```{r}
+ggplot(franchise_team_total2, aes(x=id, y=roadWins))+geom_bar(stat="identity", fill="steelblue",width=0.9)+ggtitle("Bar plot of id roadWins")
+```
+
+```{r}
+ggplot(franchise_team_total2, aes(x=id, y=roadLosses))+geom_bar(stat="identity", fill="lightblue",width=0.9)+ggtitle("Bar plot of id roadLosses")
+```
+
+
+
+
+
+```{r}
+ggplot(franchise_team_total2, aes(x=roadWins,y=roadLosses,color=teamName))+geom_point()
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
