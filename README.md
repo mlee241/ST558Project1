@@ -53,7 +53,7 @@ need to construct a URL with the name of the table and attributes we
 want to pull from it.
 
 In addition, I wrote 5 more functions that take different endpoints. In
-terms of preserving space in the ReadME.md, you can find the 5 functions
+terms of preserving space in the README.md, you can find the 5 functions
 in the README.Rmd.
 
 ``` r
@@ -164,11 +164,11 @@ get_team_stats = function(id){
 }
 ```
 
-In this example, we set `id` to 2 and plug id into the `get_team_stats`
-function and assign it to team.stats. This should be to return data for
-a single team. However, in the code example, I did not specify an id
-meaning that team.stats will get overwritten and will return data from
-all the teams instead.
+In this example, we set `id` to 2 and plug `id` into the
+`get_team_stats` function and assign it to `team.stats`. This should be
+to return data for a single team. However, in the code example, I did
+not specify an id meaning that `team.stat`s will get overwritten and
+will return data from all the teams instead.
 
 ``` r
 id=2
@@ -265,9 +265,10 @@ README.Rmd file).
 wrap = get_wrapper("https://statsapi.web.nhl.com/api/v1")
 ```
 
-This will produce a table of the team.stats modifier from the NHL Stats
-API and return all the data from all teams. Note that I did not output
-the `wrap` because it is the same output as `kable(team.stats)`.
+This will produce a table of the `team.stats` modifier from the NHL
+Stats API and return all the data from all teams. Note that I did not
+output the `wrap` because it is the same output as
+`kable(data.frame(team.stats))`.
 
 # Exploratory Data Analysis
 
