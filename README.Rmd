@@ -153,7 +153,7 @@ get_team_stats = function(id){
 }
 ```
 
-In this example, we set `id` to 2 and plug `id` into the `get_team_stats` function and assign it to `team.stats`. This should be to return data for a single team. However, in the code example, I did not specify an id meaning that `team.stat`s will get overwritten and will return data from all the teams instead.
+In this example, we set `id` to 2 and plug `id` into the `get_team_stats` function and assign it to `team.stats`. This should be to return data for a single team. However, in the code example, I did not specify an id meaning that `team.stats` will get overwritten and will return data from all the teams instead.
 
 ```{r}
 id=2
