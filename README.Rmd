@@ -163,7 +163,7 @@ team.stats = get_team_stats()
 ```
 
 ```{r}
-kable(team.stats)
+kable(data.frame(team.stats))
 ```
 
 ## Wrapper function
