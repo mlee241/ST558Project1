@@ -171,8 +171,6 @@ kable(team.stats)
 The function below is a wrapper function that is a one-stop-shop for the user to access any of the API endpoints. In this case, this wrapper function should be able to get data from the NHL stats API function I wrote above and data from the NHL Records API function I wrote as well.
 
 ```{r}
-# So wrapper function could call for modifier(team.stats) or like individual id
-#needs to get like the records api as well
 get_wrapper <- function(api_url,id){
   if(api_url=="https://records.nhl.com/site/api"){
     base_url="https://records.nhl.com/site/api"
