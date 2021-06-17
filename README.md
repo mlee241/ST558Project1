@@ -14,14 +14,6 @@ Marcus Lee
         Summaries](#contigency-tables-numerical-summaries)
     -   [Graphical Summaries](#graphical-summaries)
 
-``` r
-library(ggplot2)
-library(tidyverse)
-library(jsonlite)
-library(knitr)
-library(httr)
-```
-
 # JSON Data
 
 JSON, also known as [*Java Script Object
@@ -277,85 +269,25 @@ get_wrapper <- function(api_url,id){
 ```
 
 Here is an use case of the `get_wrapper` function working. Note that I
-have tested my `get_wrapper function with the`api\_url`and`id\` and all
-of the test cases work(The code for the test cases are in the README.Rmd
-file).
-
-    ## No encoding supplied: defaulting to UTF-8.
-    ## No encoding supplied: defaulting to UTF-8.
-    ## No encoding supplied: defaulting to UTF-8.
-    ## No encoding supplied: defaulting to UTF-8.
-
-    ## No encoding supplied: defaulting to UTF-8.
-    ## No encoding supplied: defaulting to UTF-8.
+have tested my `get_wrapper` function with the `api_url` and `id` and
+all of the test cases work(The code for the test cases are in the
+README.Rmd file).
 
 ``` r
 wrap = get_wrapper("https://statsapi.web.nhl.com/api/v1")
 ```
 
 This will produce a table of the team.stats modifier from the NHL Stats
-API and return all the data from all teams.
-
-``` r
-kable(wrap)
-```
-
-<table class="kable_wrapper">
-<tbody>
-<tr>
-<td>
-
-|  id | name                  | link             | abbreviation | teamName       | locationName | firstYearOfPlay | shortName    | officialSiteUrl                      | franchiseId | active | venue.name                        | venue.link          | venue.city   | venue.id | venue.timeZone.id    | venue.timeZone.offset | venue.timeZone.tz | division.id | division.name    | division.link          | conference.id | conference.name | conference.link          | franchise.franchiseId | franchise.teamName | franchise.link        |
-|----:|:----------------------|:-----------------|:-------------|:---------------|:-------------|:----------------|:-------------|:-------------------------------------|------------:|:-------|:----------------------------------|:--------------------|:-------------|---------:|:---------------------|----------------------:|:------------------|------------:|:-----------------|:-----------------------|--------------:|:----------------|:-------------------------|----------------------:|:-------------------|:----------------------|
-|   1 | New Jersey Devils     | /api/v1/teams/1  | NJD          | Devils         | New Jersey   | 1982            | New Jersey   | <http://www.newjerseydevils.com/>    |          23 | TRUE   | Prudential Center                 | /api/v1/venues/null | Newark       |       NA | America/New\_York    |                    -4 | EDT               |          25 | MassMutual East  | /api/v1/divisions/25   |             6 | Eastern         | /api/v1/conferences/6    |                    23 | Devils             | /api/v1/franchises/23 |
-|   2 | New York Islanders    | /api/v1/teams/2  | NYI          | Islanders      | New York     | 1972            | NY Islanders | <http://www.newyorkislanders.com/>   |          22 | TRUE   | Nassau Veterans Memorial Coliseum | /api/v1/venues/null | Uniondale    |       NA | America/New\_York    |                    -4 | EDT               |          25 | MassMutual East  | /api/v1/divisions/25   |             6 | Eastern         | /api/v1/conferences/6    |                    22 | Islanders          | /api/v1/franchises/22 |
-|   3 | New York Rangers      | /api/v1/teams/3  | NYR          | Rangers        | New York     | 1926            | NY Rangers   | <http://www.newyorkrangers.com/>     |          10 | TRUE   | Madison Square Garden             | /api/v1/venues/5054 | New York     |     5054 | America/New\_York    |                    -4 | EDT               |          25 | MassMutual East  | /api/v1/divisions/25   |             6 | Eastern         | /api/v1/conferences/6    |                    10 | Rangers            | /api/v1/franchises/10 |
-|   4 | Philadelphia Flyers   | /api/v1/teams/4  | PHI          | Flyers         | Philadelphia | 1967            | Philadelphia | <http://www.philadelphiaflyers.com/> |          16 | TRUE   | Wells Fargo Center                | /api/v1/venues/5096 | Philadelphia |     5096 | America/New\_York    |                    -4 | EDT               |          25 | MassMutual East  | /api/v1/divisions/25   |             6 | Eastern         | /api/v1/conferences/6    |                    16 | Flyers             | /api/v1/franchises/16 |
-|   5 | Pittsburgh Penguins   | /api/v1/teams/5  | PIT          | Penguins       | Pittsburgh   | 1967            | Pittsburgh   | <http://pittsburghpenguins.com/>     |          17 | TRUE   | PPG Paints Arena                  | /api/v1/venues/5034 | Pittsburgh   |     5034 | America/New\_York    |                    -4 | EDT               |          25 | MassMutual East  | /api/v1/divisions/25   |             6 | Eastern         | /api/v1/conferences/6    |                    17 | Penguins           | /api/v1/franchises/17 |
-|   6 | Boston Bruins         | /api/v1/teams/6  | BOS          | Bruins         | Boston       | 1924            | Boston       | <http://www.bostonbruins.com/>       |           6 | TRUE   | TD Garden                         | /api/v1/venues/5085 | Boston       |     5085 | America/New\_York    |                    -4 | EDT               |          25 | MassMutual East  | /api/v1/divisions/25   |             6 | Eastern         | /api/v1/conferences/6    |                     6 | Bruins             | /api/v1/franchises/6  |
-|   7 | Buffalo Sabres        | /api/v1/teams/7  | BUF          | Sabres         | Buffalo      | 1970            | Buffalo      | <http://www.sabres.com/>             |          19 | TRUE   | KeyBank Center                    | /api/v1/venues/5039 | Buffalo      |     5039 | America/New\_York    |                    -4 | EDT               |          25 | MassMutual East  | /api/v1/divisions/25   |             6 | Eastern         | /api/v1/conferences/6    |                    19 | Sabres             | /api/v1/franchises/19 |
-|   8 | Montréal Canadiens    | /api/v1/teams/8  | MTL          | Canadiens      | Montréal     | 1909            | Montréal     | <http://www.canadiens.com/>          |           1 | TRUE   | Bell Centre                       | /api/v1/venues/5028 | Montréal     |     5028 | America/Montreal     |                    -4 | EDT               |          28 | Scotia North     | /api/v1/divisions/28   |             6 | Eastern         | /api/v1/conferences/6    |                     1 | Canadiens          | /api/v1/franchises/1  |
-|   9 | Ottawa Senators       | /api/v1/teams/9  | OTT          | Senators       | Ottawa       | 1990            | Ottawa       | <http://www.ottawasenators.com/>     |          30 | TRUE   | Canadian Tire Centre              | /api/v1/venues/5031 | Ottawa       |     5031 | America/New\_York    |                    -4 | EDT               |          28 | Scotia North     | /api/v1/divisions/28   |             6 | Eastern         | /api/v1/conferences/6    |                    30 | Senators           | /api/v1/franchises/30 |
-|  10 | Toronto Maple Leafs   | /api/v1/teams/10 | TOR          | Maple Leafs    | Toronto      | 1917            | Toronto      | <http://www.mapleleafs.com/>         |           5 | TRUE   | Scotiabank Arena                  | /api/v1/venues/null | Toronto      |       NA | America/Toronto      |                    -4 | EDT               |          28 | Scotia North     | /api/v1/divisions/28   |             6 | Eastern         | /api/v1/conferences/6    |                     5 | Maple Leafs        | /api/v1/franchises/5  |
-|  12 | Carolina Hurricanes   | /api/v1/teams/12 | CAR          | Hurricanes     | Carolina     | 1979            | Carolina     | <http://www.carolinahurricanes.com/> |          26 | TRUE   | PNC Arena                         | /api/v1/venues/5066 | Raleigh      |     5066 | America/New\_York    |                    -4 | EDT               |          26 | Discover Central | /api/v1/divisions/26   |             6 | Eastern         | /api/v1/conferences/6    |                    26 | Hurricanes         | /api/v1/franchises/26 |
-|  13 | Florida Panthers      | /api/v1/teams/13 | FLA          | Panthers       | Florida      | 1993            | Florida      | <http://www.floridapanthers.com/>    |          33 | TRUE   | BB&T Center                       | /api/v1/venues/5027 | Sunrise      |     5027 | America/New\_York    |                    -4 | EDT               |          26 | Discover Central | /api/v1/divisions/26   |             6 | Eastern         | /api/v1/conferences/6    |                    33 | Panthers           | /api/v1/franchises/33 |
-|  14 | Tampa Bay Lightning   | /api/v1/teams/14 | TBL          | Lightning      | Tampa Bay    | 1991            | Tampa Bay    | <http://www.tampabaylightning.com/>  |          31 | TRUE   | AMALIE Arena                      | /api/v1/venues/null | Tampa        |       NA | America/New\_York    |                    -4 | EDT               |          26 | Discover Central | /api/v1/divisions/26   |             6 | Eastern         | /api/v1/conferences/6    |                    31 | Lightning          | /api/v1/franchises/31 |
-|  15 | Washington Capitals   | /api/v1/teams/15 | WSH          | Capitals       | Washington   | 1974            | Washington   | <http://www.washingtoncapitals.com/> |          24 | TRUE   | Capital One Arena                 | /api/v1/venues/5094 | Washington   |     5094 | America/New\_York    |                    -4 | EDT               |          25 | MassMutual East  | /api/v1/divisions/25   |             6 | Eastern         | /api/v1/conferences/6    |                    24 | Capitals           | /api/v1/franchises/24 |
-|  16 | Chicago Blackhawks    | /api/v1/teams/16 | CHI          | Blackhawks     | Chicago      | 1926            | Chicago      | <http://www.chicagoblackhawks.com/>  |          11 | TRUE   | United Center                     | /api/v1/venues/5092 | Chicago      |     5092 | America/Chicago      |                    -5 | CDT               |          26 | Discover Central | /api/v1/divisions/26   |             5 | Western         | /api/v1/conferences/5    |                    11 | Blackhawks         | /api/v1/franchises/11 |
-|  17 | Detroit Red Wings     | /api/v1/teams/17 | DET          | Red Wings      | Detroit      | 1926            | Detroit      | <http://www.detroitredwings.com/>    |          12 | TRUE   | Little Caesars Arena              | /api/v1/venues/5145 | Detroit      |     5145 | America/Detroit      |                    -4 | EDT               |          26 | Discover Central | /api/v1/divisions/26   |             6 | Eastern         | /api/v1/conferences/6    |                    12 | Red Wings          | /api/v1/franchises/12 |
-|  18 | Nashville Predators   | /api/v1/teams/18 | NSH          | Predators      | Nashville    | 1997            | Nashville    | <http://www.nashvillepredators.com/> |          34 | TRUE   | Bridgestone Arena                 | /api/v1/venues/5030 | Nashville    |     5030 | America/Chicago      |                    -5 | CDT               |          26 | Discover Central | /api/v1/divisions/26   |             5 | Western         | /api/v1/conferences/5    |                    34 | Predators          | /api/v1/franchises/34 |
-|  19 | St. Louis Blues       | /api/v1/teams/19 | STL          | Blues          | St. Louis    | 1967            | St Louis     | <http://www.stlouisblues.com/>       |          18 | TRUE   | Enterprise Center                 | /api/v1/venues/5076 | St. Louis    |     5076 | America/Chicago      |                    -5 | CDT               |          27 | Honda West       | /api/v1/divisions/27   |             5 | Western         | /api/v1/conferences/5    |                    18 | Blues              | /api/v1/franchises/18 |
-|  20 | Calgary Flames        | /api/v1/teams/20 | CGY          | Flames         | Calgary      | 1980            | Calgary      | <http://www.calgaryflames.com/>      |          21 | TRUE   | Scotiabank Saddledome             | /api/v1/venues/5075 | Calgary      |     5075 | America/Denver       |                    -6 | MDT               |          28 | Scotia North     | /api/v1/divisions/28   |             5 | Western         | /api/v1/conferences/5    |                    21 | Flames             | /api/v1/franchises/21 |
-|  21 | Colorado Avalanche    | /api/v1/teams/21 | COL          | Avalanche      | Colorado     | 1979            | Colorado     | <http://www.coloradoavalanche.com/>  |          27 | TRUE   | Ball Arena                        | /api/v1/venues/5064 | Denver       |     5064 | America/Denver       |                    -6 | MDT               |          27 | Honda West       | /api/v1/divisions/27   |             5 | Western         | /api/v1/conferences/5    |                    27 | Avalanche          | /api/v1/franchises/27 |
-|  22 | Edmonton Oilers       | /api/v1/teams/22 | EDM          | Oilers         | Edmonton     | 1979            | Edmonton     | <http://www.edmontonoilers.com/>     |          25 | TRUE   | Rogers Place                      | /api/v1/venues/5100 | Edmonton     |     5100 | America/Edmonton     |                    -6 | MDT               |          28 | Scotia North     | /api/v1/divisions/28   |             5 | Western         | /api/v1/conferences/5    |                    25 | Oilers             | /api/v1/franchises/25 |
-|  23 | Vancouver Canucks     | /api/v1/teams/23 | VAN          | Canucks        | Vancouver    | 1970            | Vancouver    | <http://www.canucks.com/>            |          20 | TRUE   | Rogers Arena                      | /api/v1/venues/5073 | Vancouver    |     5073 | America/Vancouver    |                    -7 | PDT               |          28 | Scotia North     | /api/v1/divisions/28   |             5 | Western         | /api/v1/conferences/5    |                    20 | Canucks            | /api/v1/franchises/20 |
-|  24 | Anaheim Ducks         | /api/v1/teams/24 | ANA          | Ducks          | Anaheim      | 1993            | Anaheim      | <http://www.anaheimducks.com/>       |          32 | TRUE   | Honda Center                      | /api/v1/venues/5046 | Anaheim      |     5046 | America/Los\_Angeles |                    -7 | PDT               |          27 | Honda West       | /api/v1/divisions/27   |             5 | Western         | /api/v1/conferences/5    |                    32 | Ducks              | /api/v1/franchises/32 |
-|  25 | Dallas Stars          | /api/v1/teams/25 | DAL          | Stars          | Dallas       | 1967            | Dallas       | <http://www.dallasstars.com/>        |          15 | TRUE   | American Airlines Center          | /api/v1/venues/5019 | Dallas       |     5019 | America/Chicago      |                    -5 | CDT               |          26 | Discover Central | /api/v1/divisions/26   |             5 | Western         | /api/v1/conferences/5    |                    15 | Stars              | /api/v1/franchises/15 |
-|  26 | Los Angeles Kings     | /api/v1/teams/26 | LAK          | Kings          | Los Angeles  | 1967            | Los Angeles  | <http://www.lakings.com/>            |          14 | TRUE   | STAPLES Center                    | /api/v1/venues/5081 | Los Angeles  |     5081 | America/Los\_Angeles |                    -7 | PDT               |          27 | Honda West       | /api/v1/divisions/27   |             5 | Western         | /api/v1/conferences/5    |                    14 | Kings              | /api/v1/franchises/14 |
-|  28 | San Jose Sharks       | /api/v1/teams/28 | SJS          | Sharks         | San Jose     | 1990            | San Jose     | <http://www.sjsharks.com/>           |          29 | TRUE   | SAP Center at San Jose            | /api/v1/venues/null | San Jose     |       NA | America/Los\_Angeles |                    -7 | PDT               |          27 | Honda West       | /api/v1/divisions/27   |             5 | Western         | /api/v1/conferences/5    |                    29 | Sharks             | /api/v1/franchises/29 |
-|  29 | Columbus Blue Jackets | /api/v1/teams/29 | CBJ          | Blue Jackets   | Columbus     | 1997            | Columbus     | <http://www.bluejackets.com/>        |          36 | TRUE   | Nationwide Arena                  | /api/v1/venues/5059 | Columbus     |     5059 | America/New\_York    |                    -4 | EDT               |          26 | Discover Central | /api/v1/divisions/26   |             6 | Eastern         | /api/v1/conferences/6    |                    36 | Blue Jackets       | /api/v1/franchises/36 |
-|  30 | Minnesota Wild        | /api/v1/teams/30 | MIN          | Wild           | Minnesota    | 1997            | Minnesota    | <http://www.wild.com/>               |          37 | TRUE   | Xcel Energy Center                | /api/v1/venues/5098 | St. Paul     |     5098 | America/Chicago      |                    -5 | CDT               |          27 | Honda West       | /api/v1/divisions/27   |             5 | Western         | /api/v1/conferences/5    |                    37 | Wild               | /api/v1/franchises/37 |
-|  52 | Winnipeg Jets         | /api/v1/teams/52 | WPG          | Jets           | Winnipeg     | 2011            | Winnipeg     | <http://winnipegjets.com/>           |          35 | TRUE   | Bell MTS Place                    | /api/v1/venues/5058 | Winnipeg     |     5058 | America/Winnipeg     |                    -5 | CDT               |          28 | Scotia North     | /api/v1/divisions/28   |             5 | Western         | /api/v1/conferences/5    |                    35 | Jets               | /api/v1/franchises/35 |
-|  53 | Arizona Coyotes       | /api/v1/teams/53 | ARI          | Coyotes        | Arizona      | 1979            | Arizona      | <http://www.arizonacoyotes.com/>     |          28 | TRUE   | Gila River Arena                  | /api/v1/venues/5043 | Glendale     |     5043 | America/Phoenix      |                    -7 | MST               |          27 | Honda West       | /api/v1/divisions/27   |             5 | Western         | /api/v1/conferences/5    |                    28 | Coyotes            | /api/v1/franchises/28 |
-|  54 | Vegas Golden Knights  | /api/v1/teams/54 | VGK          | Golden Knights | Vegas        | 2016            | Vegas        | <http://www.vegasgoldenknights.com/> |          38 | TRUE   | T-Mobile Arena                    | /api/v1/venues/5178 | Las Vegas    |     5178 | America/Los\_Angeles |                    -7 | PDT               |          27 | Honda West       | /api/v1/divisions/27   |             5 | Western         | /api/v1/conferences/5    |                    38 | Golden Knights     | /api/v1/franchises/38 |
-|  55 | Seattle Kraken        | /api/v1/teams/55 | SEA          | Kraken         | Seattle      | NA              | NA           | <https://www.nhl.com/seattle>        |          39 | FALSE  | NA                                | NA                  | NA           |       NA | NA                   |                    NA | NA                |          NA | NA               | /api/v1/divisions/null |            NA | NA              | /api/v1/conferences/null |                    39 | Kraken             | /api/v1/franchises/39 |
-
-</td>
-</tr>
-</tbody>
-</table>
+API and return all the data from all teams. Note that I did not output
+the `wrap` because it is the same output as `kable(team.stats)`.
 
 # Exploratory Data Analysis
-
-. You should create at least two new variables that are functions of the
-variables from a data set you use All plots should have nice labels and
-titles. 5 plots .
 
 ## Contigency Tables/ Numerical Summaries
 
 Here is a table that shows a basic count of position codes for the New
 Jersey Devils by Active/non-active players based off of the
-franchise\_goalie\_records dataset.
+`franchise_goalie_records` dataset.
 
 ``` r
 franchise_goalie_records$activePlayer = as.factor(franchise_goalie_records$activePlayer)
@@ -372,7 +304,7 @@ kable(franchise_goalie_records_table )
 | Active/Current Player |  19 |  22 |  13 |   9 |
 
 Here is a numerical summary of points made for the New Jersey Devils
-based off of position codes based off of the franchise\_goalie\_records
+based off of position codes based off of the `franchise_goalie_records`
 data set. Based off of the numerical summary, the D position code does a
 way better job compared to the other position codes based off of total
 count. However, further analysis would need to be done to truly see if
@@ -408,7 +340,7 @@ based off of the franchise goalie record data set.
 
 Here is another contingency table that shows a basic count of position
 codes for the New Jersey Devils by seasons based off of the
-franchise\_skater\_records2 data set.
+`franchise_skater_records2` data set.
 
 ``` r
 franchise_skater_records2 <- franchise_skater_records
@@ -426,13 +358,14 @@ kable(franchise_skater_records2_table)
 | L   |  38 |  23 |  16 |   9 |   5 |   5 |   3 |   0 |   0 |   0 |   0 |   0 |   2 |   0 |   0 |   0 |
 | R   |  43 |  26 |  17 |   8 |   2 |   6 |   5 |   1 |   2 |   0 |   1 |   0 |   0 |   1 |   0 |   0 |
 
-Here is another numerical summary of road\_Win\_Loss\_Ratio and
-home\_Win\_Loss\_Ratio made for the New Jersey Devils based off of the
-teams based off of the franchise\_team\_total data set.
+Here is another numerical summary of `road_Win_Loss_Ratio` and
+`home_Win_Loss_Ratio` made for the New Jersey Devils based off of the
+teams based off of the `franchise_team_total` data set.
 
-Overall, when we take a look at the summary for the home\_Win\_Loss
-Ratio, it appears that most of the teams performed way better in their
-home stadium as supposed to playing on their opponent’s stadium.
+Overall, when we take a look at the summary for the
+`home_Win_Loss_Ratio`, it appears that most of the teams performed way
+better in their home stadium as supposed to playing on their opponent’s
+stadium.
 
 ``` r
 franchise_team_total2 <- franchise_team_total
@@ -501,28 +434,21 @@ head(franchise_team_total2_numerical_home_Win_Loss_Ratio_summary)
 
 ## Graphical Summaries
 
-Continuing with the road\_Win\_Loss\_Ratio & home\_Win\_Loss\_Ratio
+Continuing with the `road_Win_Loss_Ratio` & `home_Win_Loss_Ratio`
 summary, here are a couple plots that can help us have a better
-understanding of the road\_Win\_Loss\_Ratio & home\_Win\_Loss\_Ratio.
+understanding of the `road_Win_Loss_Ratio` & `home_Win_Loss_Ratio`.
 
-From this general boxplot, we can see that most teams performed poorly
-when they were playing not at their home stadium. Also, from this
-visualization, it is very hard to figure out which team is associated
-with the box plots because some of the colors look the same.
-
-``` r
-ggplot(franchise_team_total2, aes(fill=factor(teamName), road_Win_Loss_Ratio))+geom_boxplot() + ggtitle("Ratio of Road Win to Losses Boxplot") + xlab("Ratio of Road Win to Losses") + ylab("Teams")
-```
-
-![](README_files/figure-gfm/unnamed-chunk-25-1.png)<!-- --> So, it might
-better to look without the teams and plot a general box plot which will
-be shown below.
+Here is a box plot that shows the Ratio of Road Win to Losses. Note,
+that the reason we did not make box plots for each team instead because
+if we were to make one, the scale would be off and it would be hard to
+tell since there are a lot of teams represented(There are not a lot of
+colors).
 
 ``` r
 ggplot(franchise_team_total2, aes(road_Win_Loss_Ratio, y=""))+geom_boxplot(fill="blue") + ggtitle("Ratio of Road Win to Losses Boxplot") + xlab("Ratio of Road Win to Losses") 
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-25-1.png)<!-- -->
 
 Here is another box plot, but with the Ratio of Home Win to Losses
 
@@ -530,7 +456,7 @@ Here is another box plot, but with the Ratio of Home Win to Losses
 ggplot(franchise_team_total2, aes(home_Win_Loss_Ratio, y=""))+geom_boxplot(fill="green") + ggtitle("Ratio of Home Win to Losses Boxplot") + xlab("Ratio of Home Win to Losses") 
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-27-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
 
 By comparing the two box plots, we can see that teams won a lot at their
 home stadium than playing at their opponent team’s stadium.
@@ -547,16 +473,17 @@ be around 0.70 to 0.90.
 ggplot(franchise_team_total2, aes(x=road_Win_Loss_Ratio))+geom_histogram(aes(y=..density..),color="darkblue", fill="lightblue", binwidth = 0.10) + geom_density(kernel="gaussian", color="red")+ ggtitle("Histogram of Road Win to Road Losses")+ylab("Density")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-28-1.png)<!-- --> Since box
-plots and histograms have limits on showing certain statistics, we might
-consider looking at bar plots of the roadWins and roadLosses by id on
-the franchise\_team\_total2 data set.
+![](README_files/figure-gfm/unnamed-chunk-27-1.png)<!-- -->
+
+Since box plots and histograms have limits on showing certain
+statistics, we might consider looking at bar plots of the `roadWins` and
+`roadLosses` by `id` on the `franchise_team_total2` data set.
 
 By looking and comparing the two bar plots, we should realize that it is
 hard to come up with a conclusion with the bar plots because some ids
 belong to certain teams. Not only just that, but it is hard whether or
-not the teams made an improvement on increasing their roadWins or
-decreasing their roadLosses since the data set does not have a time
+not the teams made an improvement on increasing their `roadWins` or
+decreasing their `roadLosses` since the data set does not have a time
 component. Moreover, the bar plots provided down below do not give as
 much statistical information compared to a box plots and histograms.
 
@@ -564,27 +491,27 @@ much statistical information compared to a box plots and histograms.
 ggplot(franchise_team_total2, aes(x=id, y=roadWins))+geom_bar(stat="identity", fill="steelblue",width=0.9)+ggtitle("Bar plot of id roadWins")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
 
 ``` r
 ggplot(franchise_team_total2, aes(x=id, y=roadLosses))+geom_bar(stat="identity", fill="lightblue",width=0.9)+ggtitle("Bar plot of id roadLosses")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-30-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
 
 Now, let us examine to see if there is some type of relationship between
-Road Wins and Home Wins since we took a look at road\_Win\_Loss\_Ratio &
-home\_Win\_Loss\_Ratio plots.
+Road Wins and Home Wins since we took a look at `road_Win_Loss_Ratio` &
+`home_Win_Loss_Ratio plots`.
 
 Based off of this scatterplot, it shows that a lot of teams(regardless
-of gameTypeId) got more home wins as supposed to road wins because most
-of the points are above the line. However, although it might seem like
-playing in a home stadium gives the team more advantage as supposed to
-playing in an opponent’s stadium, we need to do further Exploratory Data
-Analysis(Transforming data, statistical analysis, etc.).
+of `gameTypeId`) got more home wins as supposed to road wins because
+most of the points are above the line. However, although it might seem
+like playing in a home stadium gives the team more advantage as supposed
+to playing in an opponent’s stadium, we need to do further Exploratory
+Data Analysis(Transforming data, statistical analysis, etc.).
 
 ``` r
 ggplot(franchise_team_total2, aes(x=roadWins,y=homeWins, color=gameTypeId))+geom_point()+geom_abline()+labs(x="Road Wins", y="Home Wins", title="Scatterplot of Road Wins vs Home Wins")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-30-1.png)<!-- -->

@@ -12,7 +12,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r, echo=TRUE, warning = FALSE, message=FALSE}
+```{r, echo=TRUE, warning = FALSE, message=FALSE, include=FALSE}
 library(ggplot2)
 library(tidyverse)
 library(jsonlite)
@@ -205,17 +205,17 @@ get_wrapper <- function(api_url,id){
 }
 ```
 
-Here is an use case of the `get_wrapper` function working. Note that I have tested my `get_wrapper function with the `api_url` and `id` and all of the test cases work(The code for the test cases are in the README.Rmd file).
+Here is an use case of the `get_wrapper` function working. Note that I have tested my `get_wrapper` function with the `api_url` and `id` and all of the test cases work(The code for the test cases are in the README.Rmd file).
 
-```{r,echo=FALSE, results='hide'}
+```{r,echo=FALSE, results='hide', message=FALSE, error=FALSE}
 wrap = get_wrapper("https://records.nhl.com/site/api",2)
 ```
 
-```{r,echo=FALSE, results='hide'}
+```{r,echo=FALSE, results='hide', message=FALSE, error=FALSE}
 wrap = get_wrapper("https://records.nhl.com/site/api",)
 ```
 
-```{r,echo=FALSE, results='hide'}
+```{r,echo=FALSE, results='hide', message=FALSE, error=FALSE}
 wrap = get_wrapper("https://statsapi.web.nhl.com/api/v1",2)
 ```
 
@@ -223,21 +223,17 @@ wrap = get_wrapper("https://statsapi.web.nhl.com/api/v1",2)
 wrap = get_wrapper("https://statsapi.web.nhl.com/api/v1")
 ```
 
-This will produce a table of the team.stats modifier from the NHL Stats API and return all the data from all teams.
+This will produce a table of the team.stats modifier from the NHL Stats API and return all the data from all teams. Note that I did not output the `wrap` because it is the same output as `kable(team.stats)`.
 
-```{r}
+```{r, echo=FALSE, results='hide', include=FALSE}
 kable(wrap)
 ```
 
 # Exploratory Data Analysis
 
-. You should create at least two new variables that are functions of the variables from a data set you use
- All plots should have nice labels and titles. 5 plots
-. 
-
 ## Contigency Tables/ Numerical Summaries
 
-Here is a table that shows a basic count of position codes for the New Jersey Devils by Active/non-active players based off of the franchise_goalie_records dataset.
+Here is a table that shows a basic count of position codes for the New Jersey Devils by Active/non-active players based off of the `franchise_goalie_records` dataset.
 
 ```{r}
 franchise_goalie_records$activePlayer = as.factor(franchise_goalie_records$activePlayer)
@@ -248,7 +244,7 @@ franchise_goalie_records_table <- table(franchise_goalie_records$activePlayer, f
 kable(franchise_goalie_records_table )
 ```
 
-Here is a numerical summary of points made for the New Jersey Devils based off of position codes based off of the franchise_goalie_records data set. Based off of the numerical summary, the D position code does a way better job compared to the other position codes based off of total count. However, further analysis would need to be done to truly see if the D position code does a better job(Ex: Hypothesis test, etc.)
+Here is a numerical summary of points made for the New Jersey Devils based off of position codes based off of the `franchise_goalie_records` data set. Based off of the numerical summary, the D position code does a way better job compared to the other position codes based off of total count. However, further analysis would need to be done to truly see if the D position code does a better job(Ex: Hypothesis test, etc.)
 
 ```{r}
 numerical_table_summary <- franchise_goalie_records %>%
@@ -268,7 +264,7 @@ numerical_table_summary <- franchise_goalie_records %>%
 kable(numerical_table_summary, caption = "Numerical Summaries of the New Jersey Devils Points by Position Code based off of the franchise goalie record data set.")
 ```
 
-Here is another contingency table that shows a basic count of position codes for the New Jersey Devils by seasons based off of the franchise_skater_records2 data set.
+Here is another contingency table that shows a basic count of position codes for the New Jersey Devils by seasons based off of the `franchise_skater_records2` data set.
 
 ```{r}
 franchise_skater_records2 <- franchise_skater_records
@@ -279,9 +275,9 @@ franchise_skater_records2_table <- table(franchise_skater_records2$positionCode,
 kable(franchise_skater_records2_table)
 ```
 
-Here is another numerical summary of road_Win_Loss_Ratio and home_Win_Loss_Ratio made for the New Jersey Devils based off of the teams based off of the franchise_team_total data set. 
+Here is another numerical summary of `road_Win_Loss_Ratio` and `home_Win_Loss_Ratio` made for the New Jersey Devils based off of the teams based off of the `franchise_team_total` data set. 
 
-Overall, when we take a look at the summary for the home_Win_Loss Ratio, it appears that most of the teams performed way better in their home stadium as supposed to playing on their opponent's stadium.
+Overall, when we take a look at the summary for the `home_Win_Loss_Ratio`, it appears that most of the teams performed way better in their home stadium as supposed to playing on their opponent's stadium.
 
 ```{r}
 franchise_team_total2 <- franchise_team_total
@@ -328,14 +324,9 @@ head(franchise_team_total2_numerical_home_Win_Loss_Ratio_summary)
 
 ## Graphical Summaries
 
-Continuing with the road_Win_Loss_Ratio & home_Win_Loss_Ratio summary, here are a couple plots that can help us have a better understanding of the road_Win_Loss_Ratio & home_Win_Loss_Ratio.
+Continuing with the `road_Win_Loss_Ratio` & `home_Win_Loss_Ratio` summary, here are a couple plots that can help us have a better understanding of the `road_Win_Loss_Ratio` & `home_Win_Loss_Ratio`.
 
-From this general boxplot, we can see that most teams performed poorly when they were playing not at their home stadium. Also, from this visualization, it is very hard to figure out which team is associated with the box plots because some of the colors look the same.
-
-```{r}
-ggplot(franchise_team_total2, aes(fill=factor(teamName), road_Win_Loss_Ratio))+geom_boxplot() + ggtitle("Ratio of Road Win to Losses Boxplot") + xlab("Ratio of Road Win to Losses") + ylab("Teams")
-```
-So, it might better to look without the teams and plot a general box plot which will be shown below.
+Here is a box plot that shows the Ratio of Road Win to Losses. Note, that the reason we did not make box plots for each team instead because if we were to make one, the scale would be off and it would be hard to tell since there are a lot of teams represented(There are not a lot of colors).
 
 ```{r}
 ggplot(franchise_team_total2, aes(road_Win_Loss_Ratio, y=""))+geom_boxplot(fill="blue") + ggtitle("Ratio of Road Win to Losses Boxplot") + xlab("Ratio of Road Win to Losses") 
@@ -356,9 +347,10 @@ However, one should be careful because changing the binwidth can change the appe
 ```{r}
 ggplot(franchise_team_total2, aes(x=road_Win_Loss_Ratio))+geom_histogram(aes(y=..density..),color="darkblue", fill="lightblue", binwidth = 0.10) + geom_density(kernel="gaussian", color="red")+ ggtitle("Histogram of Road Win to Road Losses")+ylab("Density")
 ```
-Since box plots and histograms have limits on showing certain statistics, we might consider looking at bar plots of the roadWins and roadLosses by id on the franchise_team_total2 data set.
 
-By looking and comparing the two bar plots, we should realize that it is hard to come up with a conclusion with the bar plots because some ids belong to certain teams. Not only just that, but it is hard whether or not the teams made an improvement on increasing their roadWins or decreasing their roadLosses since the data set does not have a time component. Moreover, the bar plots provided down below do not give as much statistical information compared to a box plots and histograms.
+Since box plots and histograms have limits on showing certain statistics, we might consider looking at bar plots of the `roadWins` and `roadLosses` by `id` on the `franchise_team_total2` data set.
+
+By looking and comparing the two bar plots, we should realize that it is hard to come up with a conclusion with the bar plots because some ids belong to certain teams. Not only just that, but it is hard whether or not the teams made an improvement on increasing their `roadWins` or decreasing their `roadLosses` since the data set does not have a time component. Moreover, the bar plots provided down below do not give as much statistical information compared to a box plots and histograms.
 
 ```{r}
 ggplot(franchise_team_total2, aes(x=id, y=roadWins))+geom_bar(stat="identity", fill="steelblue",width=0.9)+ggtitle("Bar plot of id roadWins")
@@ -368,9 +360,9 @@ ggplot(franchise_team_total2, aes(x=id, y=roadWins))+geom_bar(stat="identity", f
 ggplot(franchise_team_total2, aes(x=id, y=roadLosses))+geom_bar(stat="identity", fill="lightblue",width=0.9)+ggtitle("Bar plot of id roadLosses")
 ```
 
-Now, let us examine to see if there is some type of relationship between Road Wins and Home Wins since we took a look at road_Win_Loss_Ratio & home_Win_Loss_Ratio plots.
+Now, let us examine to see if there is some type of relationship between Road Wins and Home Wins since we took a look at `road_Win_Loss_Ratio` & `home_Win_Loss_Ratio plots`.
 
-Based off of this scatterplot, it shows that a lot of teams(regardless of gameTypeId) got more home wins as supposed to road wins because most of the points are above the line. However, although it might seem like playing in a home stadium gives the team more advantage as supposed to playing in an opponent's stadium, we need to do further Exploratory Data Analysis(Transforming data, statistical analysis, etc.).
+Based off of this scatterplot, it shows that a lot of teams(regardless of `gameTypeId`) got more home wins as supposed to road wins because most of the points are above the line. However, although it might seem like playing in a home stadium gives the team more advantage as supposed to playing in an opponent's stadium, we need to do further Exploratory Data Analysis(Transforming data, statistical analysis, etc.).
 
 ```{r}
 ggplot(franchise_team_total2, aes(x=roadWins,y=homeWins, color=gameTypeId))+geom_point()+geom_abline()+labs(x="Road Wins", y="Home Wins", title="Scatterplot of Road Wins vs Home Wins")
