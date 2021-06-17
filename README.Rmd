@@ -224,7 +224,7 @@ wrap = get_wrapper("https://statsapi.web.nhl.com/api/v1")
 This will produce a table of the team.stats modifier from the NHL Stats API and return all the data from all teams. Note that I did not output the `wrap` because it is the same output as `kable(team.stats)`.
 
 ```{r, echo=FALSE, results='hide', include=FALSE}
-kable(wrap)
+kable(data.frame(wrap))
 ```
 
 # Exploratory Data Analysis
