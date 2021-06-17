@@ -23,10 +23,31 @@ library(httr)
 
 # JSON Data
 
+JSON, also known as [*Java Script Object Notation*](https://www.json.org/json-en.html) is a text based format for storing and transporting data. JSON is used widely across the internet and databases because of its text based format for storing data(Example: Getting data using API). In addition, JSON can represent 2D data, [hierarchical data](https://en.wikipedia.org/wiki/Hierarchical_database_model), and use key-value pairs.
+
+Since JSON is a text based format, we need to load in R packages that can handle JSON data.
+
 # Packages used for reading JSON data in R
 
+Here are R packages that can be used to work with JSON data:
+
+* `rjson`
+* `RJSONIO`
+* `jsonlite`
+
+For this project, `rjson` and `jsonlite` is used.
+
+Here are a couple resources for understanding the functionality of `rjson` and `jsonlite`:
+
+1. [https://cran.r-project.org/web/packages/rjson/rjson.pdf](https://cran.r-project.org/web/packages/rjson/rjson.pdf)
+
+2. [https://cran.r-project.org/web/packages/jsonlite/jsonlite.pdf](https://cran.r-project.org/web/packages/jsonlite/jsonlite.pdf)
 
 # Contact the NHL Records API
+
+To access the [NHL Records API](https://gitlab.com/dword4/nhlapi/-/blob/master/records-api.md), we need to construct a URL with the name of the table and attributes we want to pull from it.
+
+In addition, I wrote 5 more functions that take different endpoints. In terms of preserving space in the ReadME.md, you can find the 5 functions in the README.Rmd.
 
 ```{r}
 base_url = "https://records.nhl.com/site/api"
@@ -41,7 +62,7 @@ get_franchise = function(){
 }
 ```
 
-```{r}
+```{r, echo=FALSE, results='hide'}
 get_franchise_team_totals = function(){
   full_url = paste0(base_url, "/franchise-team-totals")
   franchise_team_totals_text = content(GET(url=full_url), "text")
@@ -50,7 +71,7 @@ get_franchise_team_totals = function(){
 }
 ```
 
-```{r}
+```{r,echo=FALSE, results='hide'}
 get_franchise_season_records = function(id){
   full_url = paste0(base_url, "/franchise-season-records?cayenneExp=franchiseId=",id)
   franchise_season_records_text = content(GET(url=full_url), "text")
@@ -59,7 +80,7 @@ get_franchise_season_records = function(id){
 }
 ```
 
-```{r}
+```{r,echo=FALSE, results='hide'}
 get_franchise_goalie_records = function(id){
   full_url = paste0(base_url, "/franchise-goalie-records?cayenneExp=franchiseId=",id)
   franchise_goalie_records_text = content(GET(url=full_url), "text")
@@ -68,7 +89,7 @@ get_franchise_goalie_records = function(id){
 }
 ```
 
-```{r}
+```{r,echo=FALSE, results='hide'}
 get_franchise_skater_records = function(id){
   full_url = paste0(base_url, "/franchise-skater-records?cayenneExp=franchiseId=",id)
   franchise_skater_records_text = content(GET(url=full_url), "text")
@@ -77,7 +98,7 @@ get_franchise_skater_records = function(id){
 }
 ```
 
-```{r}
+```{r,echo=FALSE, results='hide'}
 get_franchise_detail = function(id){
   full_url = paste0(base_url, "/franchise-detail?cayenneExp=mostRecentTeamId=",id)
   franchise_detail_text = content(GET(url=full_url), "text")
@@ -86,8 +107,11 @@ get_franchise_detail = function(id){
 }
 ```
 
-```{r, echo=FALSE, warning=FALSE, message =FALSE}
-id=23
+Here is an use case of the `get_franchise` function working.
+
+```{r, warning=FALSE, message =FALSE}
+#This id represent the New Jersey Devils
+id=23 
 franchise = get_franchise()
 franchise_team_total = get_franchise_team_totals()
 franchise_season_records = get_franchise_season_records(id)
@@ -100,12 +124,15 @@ franchise_detail = get_franchise_detail(id)
 kable(franchise)
 ```
 
-
 # Contact the NHL Stats API
+
+To access the [NHL Stats API](https://gitlab.com/dword4/nhlapi/-/blob/master/stats-api.md), we need to construct a URL with the name of the table and attributes we want to pull from it. Note that the url is different from the NHL Records API.
 
 ```{r}
 base_stats_url = "https://statsapi.web.nhl.com/api/v1"
 ```
+
+The function allows me to contact the [NHL Stats API](https://gitlab.com/dword4/nhlapi/-/blob/master/stats-api.md) for the ?expand=team.stats modifier. In this function, it should be able to take a single team or return data from all teams.
 
 ```{r}
 get_team_stats = function(id){
@@ -126,6 +153,8 @@ get_team_stats = function(id){
 }
 ```
 
+In this example, we set `id` to 2 and plug id into the `get_team_stats` function and assign it to team.stats. This should be to return data for a single team. However, in the code example, I did not specify an id meaning that team.stats will get overwritten and will return data from all the teams instead.
+
 ```{r}
 id=2
 team.stats = get_team_stats(id)
@@ -137,7 +166,9 @@ team.stats = get_team_stats()
 kable(team.stats)
 ```
 
-## Wrapper functions
+## Wrapper function
+
+The function below is a wrapper function that is a one-stop-shop for the user to access any of the API endpoints. In this case, this wrapper function should be able to get data from the NHL stats API function I wrote above and data from the NHL Records API function I wrote as well.
 
 ```{r}
 # So wrapper function could call for modifier(team.stats) or like individual id
@@ -174,28 +205,34 @@ get_wrapper <- function(api_url,id){
 }
 ```
 
+Here is an use case of the `get_wrapper` function working. Note that I have tested my `get_wrapper function with the `api_url` and `id` and all of the test cases work(The code for the test cases are in the README.Rmd file).
+
+```{r,echo=FALSE, results='hide'}
+wrap = get_wrapper("https://records.nhl.com/site/api",2)
+```
+
+```{r,echo=FALSE, results='hide'}
+wrap = get_wrapper("https://records.nhl.com/site/api",)
+```
+
+```{r,echo=FALSE, results='hide'}
+wrap = get_wrapper("https://statsapi.web.nhl.com/api/v1",2)
+```
+
 ```{r}
-# so users can enter team id or the modifere here
-# test cases, and all of it does work
-#wrap = get_wrapper("https://records.nhl.com/site/api",2)
-#wrap = get_wrapper("https://records.nhl.com/site/api",)
-#wrap = get_wrapper("https://statsapi.web.nhl.com/api/v1",2)
 wrap = get_wrapper("https://statsapi.web.nhl.com/api/v1")
 ```
 
-```{r, echo=FALSE}
-#answer= readline(prompt = "Do you want the NHL records or the NHL stats?")
-wrap
+This will produce a table of the team.stats modifier from the NHL Stats API and return all the data from all teams.
+
+```{r}
+kable(wrap)
 ```
 
 # Exploratory Data Analysis
 
-Note(Delete this later): Each graph should make sense to look at and each graph should be discussed.
-. You should data from at least two endpoints(possibly combining them into one)
 . You should create at least two new variables that are functions of the variables from a data set you use
-. You should create some contigency tables
-. You should create numerical summaries for some quantitative variables at each setting of some of your categorical variables
-. You should create at least five plots utilizing coloring, grouping, etc. All plots should have nice labels and titles(should have at least one bar plot, one histogra, one box plot and one scatter plot)
+ All plots should have nice labels and titles. 5 plots
 . 
 
 ## Contigency Tables/ Numerical Summaries
@@ -331,13 +368,17 @@ ggplot(franchise_team_total2, aes(x=id, y=roadWins))+geom_bar(stat="identity", f
 ggplot(franchise_team_total2, aes(x=id, y=roadLosses))+geom_bar(stat="identity", fill="lightblue",width=0.9)+ggtitle("Bar plot of id roadLosses")
 ```
 
+Now, let us examine to see if there is some type of relationship between Road Wins and Home Wins since we took a look at road_Win_Loss_Ratio & home_Win_Loss_Ratio plots.
 
-
-
+Based off of this scatterplot, it shows that a lot of teams(regardless of gameTypeId) got more home wins as supposed to road wins because most of the points are above the line. However, although it might seem like playing in a home stadium gives the team more advantage as supposed to playing in an opponent's stadium, we need to do further Exploratory Data Analysis(Transforming data, statistical analysis, etc.).
 
 ```{r}
-ggplot(franchise_team_total2, aes(x=roadWins,y=roadLosses,color=teamName))+geom_point()
+ggplot(franchise_team_total2, aes(x=roadWins,y=homeWins, color=gameTypeId))+geom_point()+geom_abline()+labs(x="Road Wins", y="Home Wins", title="Scatterplot of Road Wins vs Home Wins")
 ```
+
+
+
+
 
 
 
