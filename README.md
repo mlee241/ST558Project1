@@ -7,6 +7,16 @@ Marcus Lee
 -   [Packages used for reading JSON data in
     R](#packages-used-for-reading-json-data-in-r)
 -   [Contact the NHL Records API](#contact-the-nhl-records-api)
+    -   [Function for Franchise](#function-for-franchise)
+    -   [Function for
+        Franchise-team-totals](#function-for-franchise-team-totals)
+    -   [Function for
+        Franchise-season-records](#function-for-franchise-season-records)
+    -   [Function for
+        Franchise-goalie-records](#function-for-franchise-goalie-records)
+    -   [Function for
+        Franchise-skater-records](#function-for-franchise-skater-records)
+    -   [Function for Franchise-deatil](#function-for-franchise-deatil)
 -   [Contact the NHL Stats API](#contact-the-nhl-stats-api)
     -   [Wrapper function](#wrapper-function)
 -   [Exploratory Data Analysis](#exploratory-data-analysis)
@@ -52,13 +62,13 @@ API](https://gitlab.com/dword4/nhlapi/-/blob/master/records-api.md), we
 need to construct a URL with the name of the table and attributes we
 want to pull from it.
 
-In addition, I wrote 5 more functions that take different endpoints. In
-terms of preserving space in the README.md, you can find the 5 functions
-in the README.Rmd.
+In addition, I wrote 5 more functions that take different endpoints.
 
 ``` r
 base_url = "https://records.nhl.com/site/api"
 ```
+
+## Function for Franchise
 
 ``` r
 get_franchise = function(){
@@ -66,6 +76,61 @@ get_franchise = function(){
   franchise_text = content(GET(url=full_url), "text")
   franchise_json = fromJSON(franchise_text, flatten = T)
   return(franchise_json$data)
+}
+```
+
+## Function for Franchise-team-totals
+
+``` r
+get_franchise_team_totals = function(){
+  full_url = paste0(base_url, "/franchise-team-totals")
+  franchise_team_totals_text = content(GET(url=full_url), "text")
+  franchise_team_totals_json = fromJSON(franchise_team_totals_text, flatten = T)
+  return(franchise_team_totals_json$data)
+}
+```
+
+## Function for Franchise-season-records
+
+``` r
+get_franchise_season_records = function(id){
+  full_url = paste0(base_url, "/franchise-season-records?cayenneExp=franchiseId=",id)
+  franchise_season_records_text = content(GET(url=full_url), "text")
+  franchise_season_records_json = fromJSON(franchise_season_records_text, flatten = T)
+  return(franchise_season_records_json$data)
+}
+```
+
+## Function for Franchise-goalie-records
+
+``` r
+get_franchise_goalie_records = function(id){
+  full_url = paste0(base_url, "/franchise-goalie-records?cayenneExp=franchiseId=",id)
+  franchise_goalie_records_text = content(GET(url=full_url), "text")
+  franchise_goalie_records_json = fromJSON(franchise_goalie_records_text, flatten = T)
+  return(franchise_goalie_records_json$data)
+}
+```
+
+## Function for Franchise-skater-records
+
+``` r
+get_franchise_skater_records = function(id){
+  full_url = paste0(base_url, "/franchise-skater-records?cayenneExp=franchiseId=",id)
+  franchise_skater_records_text = content(GET(url=full_url), "text")
+  franchise_skater_records_json = fromJSON(franchise_skater_records_text, flatten = T)
+  return(franchise_skater_records_json$data)
+}
+```
+
+## Function for Franchise-deatil
+
+``` r
+get_franchise_detail = function(id){
+  full_url = paste0(base_url, "/franchise-detail?cayenneExp=mostRecentTeamId=",id)
+  franchise_detail_text = content(GET(url=full_url), "text")
+  franchise_detail_json = fromJSON(franchise_detail_text, flatten = T)
+  return(franchise_detail_json$data)
 }
 ```
 
@@ -270,6 +335,10 @@ Stats API and return all the data from all teams. Note that I did not
 output the `wrap` because it is the same output as
 `kable(data.frame(team.stats))`.
 
+``` r
+kable(data.frame(wrap))
+```
+
 # Exploratory Data Analysis
 
 ## Contigency Tables/ Numerical Summaries
@@ -347,9 +416,9 @@ kable(franchise_skater_records2_table)
 | L   |  38 |  23 |  16 |   9 |   5 |   5 |   3 |   0 |   0 |   0 |   0 |   0 |   2 |   0 |   0 |   0 |
 | R   |  43 |  26 |  17 |   8 |   2 |   6 |   5 |   1 |   2 |   0 |   1 |   0 |   0 |   1 |   0 |   0 |
 
-Here is another numerical summary of `road_Win_Loss_Ratio` and
-`home_Win_Loss_Ratio` made for the New Jersey Devils based off of the
-teams based off of the `franchise_team_total` data set.
+Here is another numerical summary of the `road_Win_Loss_Ratio` and
+`home_Win_Loss_Ratio` based off of the teams based off of the
+`franchise_team_total` data set.
 
 Overall, when we take a look at the summary for the
 `home_Win_Loss_Ratio`, it appears that most of the teams performed way
@@ -490,7 +559,7 @@ ggplot(franchise_team_total2, aes(x=id, y=roadLosses))+geom_bar(stat="identity",
 
 Now, let us examine to see if there is some type of relationship between
 Road Wins and Home Wins since we took a look at `road_Win_Loss_Ratio` &
-`home_Win_Loss_Ratio plots`.
+`home_Win_Loss_Ratio` plots.
 
 Based off of this scatterplot, it shows that a lot of teams(regardless
 of `gameTypeId`) got more home wins as supposed to road wins because
